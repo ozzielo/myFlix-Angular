@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { catchError } from 'rxjs/internal/operators';
+// import { catchError } from 'rxjs/internal/operators';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, catchError } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 const apiUrl = 'https://oscarsmyflixapp.herokuapp.com/';
@@ -392,4 +392,7 @@ export class DeleteUserProfileService {
   }
 }
 
+export class FetchApiDataService {
+  constructor() { }
+}
 
