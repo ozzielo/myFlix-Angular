@@ -38,7 +38,9 @@ export class UserRegistrationService {
       'Something bad happened; please try again later.');
   }
 }
-
+@Injectable({
+  providedIn: 'root'
+})
 export class UserLoginService {
   constructor(private http: HttpClient) {
   }
