@@ -1,5 +1,5 @@
-<div style="display: flex;">
-    <mat-card *ngFor="let movie of movies;" style="flex: 1 1 auto;">
+<div class="movies-container">
+    <mat-card *ngFor="let movie of movies;">
         <mat-card-header>
             <mat-card-title>{{movie.Title}}</mat-card-title>
             <mat-card-subtitle>Directed by: {{movie.Director.Name}}</mat-card-subtitle>
@@ -9,6 +9,9 @@
         </div>
 
         <mat-card-actions>
+            <button mat-button color="primary" (click)="openSummaryDialog(movie.Title, movie.Description)">
+                Summary
+            </button>
             <button mat-button color="primary" (click)="openGenreDialog(movie.Genre.Name, movie.Genre.Description)">
                 Genre
             </button>
@@ -18,10 +21,12 @@
             movie.Director.Death)">
                 Director
             </button>
-            <button mat-button color="primary" (click)="openSummaryDialog(movie.Title, movie.Description)">
-                Summary
+            <button mat-icon-button (click)="toggleFavorite(movie)">
+                <mat-icon *ngIf="!isFavorite(movie._id)"> favorite_border </mat-icon>
+                <mat-icon *ngIf="isFavorite(movie._id)"> favorite </mat-icon>
             </button>
-            <mat-icon>favorite_border</mat-icon>
+
+
         </mat-card-actions>
     </mat-card>
 </div>

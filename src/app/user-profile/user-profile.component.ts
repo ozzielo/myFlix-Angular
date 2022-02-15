@@ -19,7 +19,7 @@ export class UserProfileComponent implements OnInit {
   user: any = {};
   // Username = localStorage.getItem('user');
 
-  FavMovies: any[] = [];
+  FavMovies: any = [];
 
   constructor(
     public fetchApiData: UserRegistrationService,
@@ -30,7 +30,7 @@ export class UserProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.getUserInfo();
-    this.getFavoriteMovies();
+    // this.getFavoriteMovies();
   }
 
   /**
@@ -40,27 +40,53 @@ export class UserProfileComponent implements OnInit {
    * @return user's data in json format
    */
   getUserInfo(): void {
-    const user = localStorage.getItem('user');
-    if (user) {
-      this.fetchApiData.getUserProfile(user).subscribe((resp: User) => {
-        this.user = resp;
-
-        console.log(this.user);
+    let movies: any[] = [];
+    const username = JSON.parse(localStorage.getItem('user') || '');
+    if (username) {
+      this.fetchApiData.getUserProfile(username.Username).subscribe((res: any) => {
+        this.user = res;
       });
     }
+    this.fetchApiData.getAllMovies().subscribe((res: any) => {
+      movies = res;
+
+      movies.forEach((movie: any) => {
+        if (this.user.FavoriteMovies.includes(movie._id)) {
+          this.FavMovies.push(movie);
+        }
+      });
+    });
+    // return (
+    //   this.user,
+    //   this.FavMovies)
+
   }
 
   /**
    * get user's FavoriteMovies from the user's data
    */
-  getFavoriteMovies(): void {
-    const user = localStorage.getItem('user');
-    this.fetchApiData.getUserProfile(user).subscribe((resp: any) => {
-      this.FavMovies = resp.FavoriteMovies;
-      console.log(this.FavMovies);
-      return this.FavMovies;
-    });
-  }
+  // 
+  // getFavoriteMovies(): void {
+  //   let movies: any[] = [];
+  //   this.fetchApiData.getAllMovies().subscribe((res: any) => {
+  //     movies = res;
+  //     movies.forEach((movie: any) => {
+  //       if (this.user.FavoriteMovies.includes(movie._id)) {
+  //         this.FavMovies.push(movie);
+  //       }
+  //     });
+  //   });
+  //   return this.FavMovies;
+  // }
+
+  // getFavoriteMovies(): void {
+  //   const user = JSON.parse(localStorage.getItem('user') || '');
+  //   this.fetchApiData.getUserProfile(user.Username).subscribe((res: any) => {
+  //     this.FavMovies = res.FavoriteMovies;
+  //     console.log(this.FavMovies, "222");
+  //   });
+  //   return this.FavMovies;
+  // }
 
   /**
    * use API end-point to remove user favorite
@@ -70,8 +96,25 @@ export class UserProfileComponent implements OnInit {
    * @returns updated user's data in json format
    */
   removeFavoriteMovie(MovieId: string, title: string): void {
-    this.fetchApiData.deleteFavoriteMovies().subscribe((resp: any) => {
+    let movies: any[] = [];
+
+    this.fetchApiData.deleteFavoriteMovies(MovieId).subscribe((resp: any) => {
       console.log(resp);
+      this.user = resp;
+      this.FavMovies = [];
+      console.log(this.user);
+
+      this.fetchApiData.getAllMovies().subscribe((res: any) => {
+        movies = res;
+        console.log(this.FavMovies)
+
+
+        movies.forEach((movie: any) => {
+          if (this.user.FavoriteMovies.includes(movie._id)) {
+            this.FavMovies.push(movie);
+          }
+        });
+      });
       this.snackBar.open(
         `${title} has been removed from your favorites!`,
         'OK',
@@ -79,8 +122,13 @@ export class UserProfileComponent implements OnInit {
           duration: 4000,
         }
       );
-      this.ngOnInit();
-    });
+      // this.ngOnInit();
+    })
+
+
+    // this.ngOnInit();
+
+
   }
 
   /**

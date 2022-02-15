@@ -10,12 +10,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class EditProfileFormComponent implements OnInit {
   Username = localStorage.getItem('user');
-  user: any = {};
+  user: any = JSON.parse(localStorage.getItem('user') || '');
 
   /**
    *  Binding input values to userProfile object
    */
-  @Input() userProfile = {
+  @Input() userData = {
     Username: this.user.Username,
     Password: this.user.Password,
     Email: this.user.Email,
@@ -29,18 +29,18 @@ export class EditProfileFormComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.getUser();
+    this.getUserInfo();
   }
 
   /**
    * get user info
    */
-  getUser(): void {
-    const user = localStorage.getItem('user');
-    this.fetchApiData.getUserProfile().subscribe((resp: any) => {
-      this.user = resp;
-    });
-  }
+  // getUser(): void {
+  //   const user = localStorage.getItem('user');
+  //   this.fetchApiData.getUserProfile().subscribe((resp: any) => {
+  //     this.user = resp;
+  //   });
+  // }
 
   /**
    * updates the user information in API
@@ -51,14 +51,18 @@ export class EditProfileFormComponent implements OnInit {
    * then stores it in localstorage. a popup message is displayed after successful updated
    */
   editUser(): void {
+    const user = JSON.parse(localStorage.getItem('user') || '');
+    console.log(this.userData, "111")
     this.fetchApiData
-      .editUserProfile()
+      .editUserProfile(this.userData)
       .subscribe((resp) => {
+        console.log(this.userData, "222")
+
         this.dialogRef.close();
 
         // update profile in localstorage
-        localStorage.setItem('Username', this.userProfile.Username);
-        localStorage.setItem('Password', this.userProfile.Password);
+        localStorage.setItem('user', JSON.stringify(resp));
+        // localStorage.setItem('Password', this.userProfile.Password);
 
         this.snackBar.open('Your profile was updated successfully!', 'OK', {
           duration: 4000,
@@ -67,5 +71,16 @@ export class EditProfileFormComponent implements OnInit {
           window.location.reload();
         });
       });
+  }
+
+  getUserInfo(): void {
+    const user = JSON.parse(localStorage.getItem('user') || '');
+    if (user) {
+      this.fetchApiData.getUserProfile(user.Username).subscribe((res: any) => {
+        this.user = res;
+
+        console.log(this.user);
+      });
+    }
   }
 }

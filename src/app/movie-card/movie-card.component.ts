@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { GetAllMoviesService } from '../fetch-api-data.service';
+import { UserRegistrationService } from '../fetch-api-data.service';
 import { GenreCardComponent } from '../genre-card/genre-card.component';
 import { DirectorCardComponent } from '../director-card/director-card.component';
 import { SummaryCardComponent } from '../summary-card/summary-card.component';
 
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -14,11 +15,16 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class MovieCardComponent implements OnInit {
   movies: any[] = [];
-  constructor(public fetchApiData: GetAllMoviesService,
-    public dialog: MatDialog) { }
+  FavMovies: any = [];
+
+  constructor(public fetchApiData: UserRegistrationService,
+    public dialog: MatDialog,
+    public snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.getMovies();
+    this.getFavoriteMovies();
+
   }
 
   getMovies(): void {
@@ -70,6 +76,49 @@ export class MovieCardComponent implements OnInit {
       data: { title: title, description: description },
       width: '300px',
     });
+  }
+
+  addFavoriteMovies(MovieID: string, title: string): void {
+    this.fetchApiData.addFavoriteMovies(MovieID).subscribe((resp: any) => {
+      this.snackBar.open(`${title} has been added to your favorites!`, 'OK', {
+        duration: 4000,
+      });
+      this.ngOnInit();
+    });
+    // return this.getFavoriteMovies();
+  }
+  getFavoriteMovies(): void {
+    const user = JSON.parse(localStorage.getItem('user') || '');
+    this.fetchApiData.getUserProfile(user.Username).subscribe((res: any) => {
+      this.FavMovies = res.FavoriteMovies;
+      console.log(this.FavMovies, "222");
+    });
+    return this.FavMovies;
+  }
+
+  removeFavoriteMovie(MovieId: string, title: string): void {
+    this.fetchApiData.deleteFavoriteMovies(MovieId).subscribe((resp: any) => {
+      console.log(resp);
+      this.snackBar.open(
+        `${title} has been removed from your favorites!`,
+        'OK',
+        {
+          duration: 4000,
+        }
+      );
+      this.ngOnInit();
+    });
+  }
+
+
+  isFavorite(MovieID: string): boolean {
+    return this.FavMovies.some((movie: any) => movie === MovieID);
+  }
+
+  toggleFavorite(movie: any): void {
+    this.isFavorite(movie._id)
+      ? this.removeFavoriteMovie(movie._id, movie.Title)
+      : this.addFavoriteMovies(movie._id, movie.Title);
   }
 }
 

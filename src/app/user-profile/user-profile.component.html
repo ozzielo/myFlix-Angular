@@ -28,9 +28,16 @@
         </mat-card-actions>
     </mat-card>
 </div>
-<mat-divider></mat-divider>
 
-<h2 class="user-fav">Your Favorite Movies</h2>
+<!-- <div>
+    <h2 class="user-fav">Your Favorite Movies</h2>
+</div> -->
+<!-- <div class="test"> -->
+<!-- <p>Hello</p> -->
+<!-- </div> -->
+<h2 style="margin: 0" class="user-fav">FAVORITE MOVIES</h2>
+<mat-divider class="fav-divider"></mat-divider>
+
 <div class="favorites-container">
     <mat-card *ngFor="let favorite of FavMovies; let i = index" class="favorite-card">
         <mat-card-header class="fav-header">
@@ -45,7 +52,7 @@
         <mat-card-actions class="fav-action">
             <button mat-button color="accent" id="fav-action-btn"
                 (click)="openSynopsisDialog(favorite.Title, favorite.Description)">
-                Synopsis
+                Summary
             </button>
             <button mat-button color="accent" id="fav-action-btn" (click)="
             openGenreDialog(favorite.Genre.Name, favorite.Genre.Description)
@@ -64,7 +71,7 @@
             </button>
         </mat-card-actions>
 
-        <button mat-icon-button (click)="removeFavoriteMovie(favorite._id, favorite.title)">
+        <button mat-icon-button (click)="removeFavoriteMovie(favorite._id, favorite.Title)">
             <mat-icon class="remove-btn">remove_circle</mat-icon>
         </button>
     </mat-card>
