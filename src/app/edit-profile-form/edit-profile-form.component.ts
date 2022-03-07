@@ -32,24 +32,7 @@ export class EditProfileFormComponent implements OnInit {
     this.getUserInfo();
   }
 
-  /**
-   * get user info
-   */
-  // getUser(): void {
-  //   const user = localStorage.getItem('user');
-  //   this.fetchApiData.getUserProfile().subscribe((resp: any) => {
-  //     this.user = resp;
-  //   });
-  // }
 
-  /**
-   * updates the user information in API
-   * @function editUser
-   * @param Username {any}
-   * @param userProfile {any}
-   * @return an updated user in json format
-   * then stores it in localstorage. a popup message is displayed after successful updated
-   */
   editUser(): void {
     const user = JSON.parse(localStorage.getItem('user') || '');
     console.log(this.userData, "111")
@@ -60,9 +43,7 @@ export class EditProfileFormComponent implements OnInit {
 
         this.dialogRef.close();
 
-        // update profile in localstorage
         localStorage.setItem('user', JSON.stringify(resp));
-        // localStorage.setItem('Password', this.userProfile.Password);
 
         this.snackBar.open('Your profile was updated successfully!', 'OK', {
           duration: 4000,

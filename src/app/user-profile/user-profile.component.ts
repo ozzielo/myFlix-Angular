@@ -17,7 +17,6 @@ import { SummaryCardComponent } from '../summary-card/summary-card.component';
 })
 export class UserProfileComponent implements OnInit {
   user: any = {};
-  // Username = localStorage.getItem('user');
 
   FavMovies: any = [];
 
@@ -30,15 +29,9 @@ export class UserProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.getUserInfo();
-    // this.getFavoriteMovies();
   }
 
-  /**
-   * call API end-point to get the user's information
-   * @function getUser
-   * @param Username
-   * @return user's data in json format
-   */
+
   getUserInfo(): void {
     let movies: any[] = [];
     const username = JSON.parse(localStorage.getItem('user') || '');
@@ -56,45 +49,13 @@ export class UserProfileComponent implements OnInit {
         }
       });
     });
-    // return (
-    //   this.user,
-    //   this.FavMovies)
 
   }
 
-  /**
-   * get user's FavoriteMovies from the user's data
-   */
-  // 
-  // getFavoriteMovies(): void {
-  //   let movies: any[] = [];
-  //   this.fetchApiData.getAllMovies().subscribe((res: any) => {
-  //     movies = res;
-  //     movies.forEach((movie: any) => {
-  //       if (this.user.FavoriteMovies.includes(movie._id)) {
-  //         this.FavMovies.push(movie);
-  //       }
-  //     });
-  //   });
-  //   return this.FavMovies;
-  // }
 
-  // getFavoriteMovies(): void {
-  //   const user = JSON.parse(localStorage.getItem('user') || '');
-  //   this.fetchApiData.getUserProfile(user.Username).subscribe((res: any) => {
-  //     this.FavMovies = res.FavoriteMovies;
-  //     console.log(this.FavMovies, "222");
-  //   });
-  //   return this.FavMovies;
-  // }
 
-  /**
-   * use API end-point to remove user favorite
-   * @function deleteFavoriteMovie
-   * @param MovieId {string}
-   * @param title {string}
-   * @returns updated user's data in json format
-   */
+
+
   removeFavoriteMovie(MovieId: string, title: string): void {
     let movies: any[] = [];
 
@@ -122,21 +83,11 @@ export class UserProfileComponent implements OnInit {
           duration: 4000,
         }
       );
-      // this.ngOnInit();
+
     })
-
-
-    // this.ngOnInit();
-
 
   }
 
-  /**
-   * call API end-point to remove the current user
-   * @function deleteUser
-   * @param Username {any}
-   * @return remove status
-   */
   deleteUser(): void {
     this.fetchApiData.deleteUserProfile().subscribe(() => {
       this.snackBar.open(`has been removed!`, 'OK', {
@@ -147,10 +98,7 @@ export class UserProfileComponent implements OnInit {
     this.router.navigate(['welcome']);
   }
 
-  /**
-   * open a dialog to edit the user profile
-   * @module EditProfileFormComponent
-   */
+
   openEditProfileFormDialog(): void {
     this.dialog.open(EditProfileFormComponent, {
       width: '280px',
@@ -188,7 +136,7 @@ export class UserProfileComponent implements OnInit {
   }
 
   /**
-   * open a dialog to display the SynopsisCardComponent
+   * open a dialog to display the SummaryCardComponent
    * @param title {string}
    * @param description {string}
    */

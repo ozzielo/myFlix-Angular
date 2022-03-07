@@ -85,7 +85,6 @@ export class MovieCardComponent implements OnInit {
       });
       this.ngOnInit();
     });
-    // return this.getFavoriteMovies();
   }
   getFavoriteMovies(): void {
     const user = JSON.parse(localStorage.getItem('user') || '');
